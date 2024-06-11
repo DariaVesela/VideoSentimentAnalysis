@@ -1,19 +1,50 @@
-# bda
+import os
+from pytube import YouTube
+from textblob import TextBlob
 
-# 1. Manually retrieve 10-15 random video URLs from YouTube.
-# Save the URLs in a text file called video_urls.txt , where each URL should be stored on a
-# separate line.
-# Consider YouTube videos that are 2-3 minutes in duration.
+def extract_subtitle_from_yt_video(yt_url: str) -> str:
+    try:
+        yt = YouTube(yt_url)
+        yt.bypass_age_gate()
+        caption = yt.captions['en']
+        subtitles = ""
+        
+        for sub in caption.json_captions['events']:
+            for text in sub['segs']:
+                subtitles += text['utf8']
+        
+        return subtitles
+    except Exception as e:
+        print(f"Failed to extract subtitles for URL: {yt_url}. Error: {e}")
+        return ""
 
-def retrieve_videos():
-    ...
+def extract_title_from_yt_video(yt_url: str) -> str:
+    try:
+        yt = YouTube(yt_url)
+        yt.bypass_age_gate()
+        return yt.title
+    except Exception as e:
+        print(f"Failed to extract title for URL: {yt_url}. Error: {e}")
+        return "Unknown Title"
 
-# 2. Develop a Python script to read the URLs.
-# Assuming you have the text file named video_urls.txt containing the URLs of YouTube videos,
-# load it in Python and extract the URLs using your preferred data structure
+def sentiment_analysis(text: str) -> float:
+    blob = TextBlob(text)
+    return blob.sentiment.polarity
 
-def extract_URLs():
-    ...
+def extract_yt_urls() -> list[str]:
+    with open('video_urls.txt', 'r') as file:
+        # Read all lines from the file
+        lines = file.readlines()
+    return [line.strip() for line in lines]
 
-
-
+if __name__ == "__main__":
+    yt_urls = extract_yt_urls()
+    for url in yt_urls:
+        print(f"Processing URL: {url}")  # Debug print statement before processing each URL
+        try:
+            title = extract_title_from_yt_video(url)
+            subtitle = extract_subtitle_from_yt_video(url)
+            sentimental_analysis_score = sentiment_analysis(subtitle)
+            print(f"{title} => {sentimental_analysis_score}")
+        except Exception as e:
+            print(f"Error processing URL: {url}. Error: {e}")
