@@ -32,7 +32,7 @@ def sentiment_analysis(text: str) -> float:
     return blob.sentiment.polarity
 
 def extract_yt_urls() -> list[str]:
-    with open('video_urls.txt', 'r') as file:
+    with open('services/video_urls.txt', 'r') as file:
         # Read all lines from the file
         lines = file.readlines()
     return [line.strip() for line in lines]
