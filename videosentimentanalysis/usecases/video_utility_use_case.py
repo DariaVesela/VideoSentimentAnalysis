@@ -3,26 +3,36 @@ from enum import StrEnum
 from videosentimentanalysis.domain.audio import Audio
 from videosentimentanalysis.domain.video import Video
 from videosentimentanalysis.usecases.protocols.extract_audio import ExtractAudio
+from videosentimentanalysis.usecases.protocols.extract_polarity_and_sensitivity import ExtractPolarityAndSensitivity
 from videosentimentanalysis.usecases.protocols.extract_text import ExtractText
 from videosentimentanalysis.usecases.protocols.logging import Logging
+from videosentimentanalysis.usecases.protocols.translate_text import LanguageOptions, TranslateText
 
-
-class LanguageOptions(StrEnum):
-    ENGLISH = "EN"
-    SPANISH = "ES"
 
 class VideoUtilityUseCase:
 
-    def __init__(self, video: Video, logger: Logging, extract_audio: ExtractAudio, extract_text: ExtractText):
+    def __init__(
+            self,
+            video: Video,
+            logger: Logging,
+            extract_audio: ExtractAudio,
+            extract_text: ExtractText,
+            extract_polarity_and_sensitivity: ExtractPolarityAndSensitivity,
+            translate: TranslateText
+    ):
         self.video: Video = video
         self.logger: Logging = logger
         self.extract_audio_util: ExtractAudio = extract_audio
         self.extract_text_util: ExtractText = extract_text
         self._audio: Audio|None = None
+        self.extract_polarity_and_sensitivity: ExtractPolarityAndSensitivity = extract_polarity_and_sensitivity
+        self.translate: TranslateText = translate
 
     def get_sentiment_analysis(self) -> tuple[float, float]:
         transcribed_audio = self.transcribe_audio()
-        # Perform analsis
+        self.logger.info(f"Performing sentiment analysis on video {self.video.title}")
+        return self.extract_polarity_and_sensitivity.get_polarity(transcribed_audio), self.extract_polarity_and_sensitivity.get_sensitivity(transcribed_audio)
+        # Perform analysis
 
     def extract_audio(self) -> Audio:
         if self._audio is not None:
@@ -41,6 +51,7 @@ class VideoUtilityUseCase:
 
     def translate_text(self, source_lang:LanguageOptions, target_lang:LanguageOptions) -> str:
         transcribed_audio = self.transcribe_audio()
+        return self.translate.translate_text(text=transcribed_audio, source_lang=source_lang, target_lang=target_lang)
 
     def detect_emotions(self) -> dict[str: float]:
         transcribed_audio = self.transcribe_audio()
