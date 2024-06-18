@@ -3,6 +3,7 @@ from enum import StrEnum
 from videosentimentanalysis.domain.audio import Audio
 from videosentimentanalysis.domain.video import Video
 from videosentimentanalysis.usecases.protocols.extract_audio import ExtractAudio
+from videosentimentanalysis.usecases.protocols.extract_emotions import ExtractEmotions
 from videosentimentanalysis.usecases.protocols.extract_polarity_and_sensitivity import ExtractPolarityAndSensitivity
 from videosentimentanalysis.usecases.protocols.extract_text import ExtractText
 from videosentimentanalysis.usecases.protocols.logging import Logging
@@ -18,7 +19,8 @@ class VideoUtilityUseCase:
             extract_audio: ExtractAudio,
             extract_text: ExtractText,
             extract_polarity_and_sensitivity: ExtractPolarityAndSensitivity,
-            translate: TranslateText
+            translate: TranslateText,
+            extract_emotions: ExtractEmotions
     ):
         self.video: Video = video
         self.logger: Logging = logger
@@ -27,6 +29,7 @@ class VideoUtilityUseCase:
         self._audio: Audio|None = None
         self.extract_polarity_and_sensitivity: ExtractPolarityAndSensitivity = extract_polarity_and_sensitivity
         self.translate: TranslateText = translate
+        self.extract_emotions: ExtractEmotions = extract_emotions
 
     def get_sentiment_analysis(self) -> tuple[float, float]:
         transcribed_audio = self.transcribe_audio()
@@ -55,4 +58,6 @@ class VideoUtilityUseCase:
 
     def detect_emotions(self) -> dict[str: float]:
         transcribed_audio = self.transcribe_audio()
+        return self.extract_emotions.get_emotions(text=transcribed_audio)
+
 

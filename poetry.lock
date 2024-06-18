@@ -509,6 +509,23 @@ files = [
 ]
 
 [[package]]
+name = "emoji"
+version = "2.12.1"
+description = "Emoji for Python"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "emoji-2.12.1-py3-none-any.whl", hash = "sha256:a00d62173bdadc2510967a381810101624a2f0986145b8da0cffa42e29430235"},
+    {file = "emoji-2.12.1.tar.gz", hash = "sha256:4aa0488817691aa58d83764b6c209f8a27c0b3ab3f89d1b8dceca1a62e4973eb"},
+]
+
+[package.dependencies]
+typing-extensions = ">=4.7.0"
+
+[package.extras]
+dev = ["coverage", "pytest (>=7.4.4)"]
+
+[[package]]
 name = "executing"
 version = "2.0.1"
 description = "Get the currently executing AST node of a frame, and other information"
@@ -2945,6 +2962,21 @@ test = ["pre-commit", "pytest (>=7.0)", "pytest-timeout"]
 typing = ["mypy (>=1.6,<2.0)", "traitlets (>=5.11.1)"]
 
 [[package]]
+name = "text2emotion"
+version = "0.0.5"
+description = "Detecting emotions behind the text, text2emotion package will help you to understand the emotions in textual meassages."
+optional = false
+python-versions = "*"
+files = [
+    {file = "text2emotion-0.0.5-py3-none-any.whl", hash = "sha256:3724a0a610f3a35ada599de0b9a1deff5b8902fb55078596236c31505ee75421"},
+    {file = "text2emotion-0.0.5.tar.gz", hash = "sha256:a7868ff1aee3362491c9ca094ae3d975678693aaa5e9144d1ad0eb64dd8f32e8"},
+]
+
+[package.dependencies]
+emoji = ">=0.6.0"
+nltk = "*"
+
+[[package]]
 name = "textblob"
 version = "0.18.0.post0"
 description = "Simple, Pythonic text processing. Sentiment analysis, part-of-speech tagging, noun phrase parsing, and more."
@@ -3298,4 +3330,4 @@ dev = ["black (>=19.3b0)", "pytest (>=4.6.2)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "3c0e2985651ecd687ac3579ddb23f88d2ce13dfededf8180e9aface6c39f7add"
+content-hash = "d57d0aa048d74e46a604ff512b12d937b0308cdc33d1385c202c0b2acde85262"
