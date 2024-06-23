@@ -7,8 +7,20 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.12"
-pytube = "^15.0.0"
 textblob = "^0.18.0.post0"
+pydantic = "^2.7.4"
+jupyter = "^1.0.0"
+loguru = "^0.7.2"
+pytube = "^15.0.0"
+moviepy = "^1.0.3"
+speechrecognition = "^3.10.4"
+numpy = "^1.21.2"
+soundfile = "^0.12.1"
+torch = "^2.3.1"
+openai-whisper = {git = "https://github.com/openai/whisper.git"}
+deep-translator = "^1.11.4"
+text2emotion = "0.0.5"
+emoji = "1.7.0"
 
 
 [build-system]
