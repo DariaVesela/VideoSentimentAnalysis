@@ -37,9 +37,9 @@ class VideoUseCase:
         self.logger.info(f"Bypassed age restriction for video from {raw_video_url}")
         stream=youtube_session.streams.first()
         # Adding a filename prefix so that we can store videos with the same name
-        location_of_download= stream.download(output_path=str(self.video_output_directory), filename_prefix=str(uuid4()))
+        location_of_download = Path(stream.download(output_path=str(self.video_output_directory), filename=f"{uuid4()}.mp4"))
         self.logger.info(f"Downloaded video from {raw_video_url} saved to {location_of_download}")
-        return Video(local_storage_path=Path(location_of_download), title=youtube_session.title)
+        return Video(local_storage_path=location_of_download, title=youtube_session.title)
 
 
     def download_raw_videos_sequentially(self,raw_video_urls: list[RawVideoUrl]) -> list[Video]:
@@ -51,6 +51,7 @@ class VideoUseCase:
 
     def _download_semaphore_multiprocessing_wrapper(self, raw_video_url: RawVideoUrl, semaphore: multiprocessing.Semaphore, results: list[Video|None] , index: int) -> None:
         with semaphore:
+            self.logger.log(f"Downloading {raw_video_url} on process {index}")
             video = self.download_video(raw_video_url=raw_video_url)
             results[index] = video
 
@@ -82,6 +83,7 @@ class VideoUseCase:
 
     def _download_semaphore_threading_wrapper(self, raw_video_url: RawVideoUrl, semaphore: Semaphore, results: list[Video|None], index: int) -> None:
         with semaphore:
+            self.logger.log(f"Downloading {raw_video_url} on thread {index}")
             video = self.download_video(raw_video_url=raw_video_url)
             results[index] = video
 

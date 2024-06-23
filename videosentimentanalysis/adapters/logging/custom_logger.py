@@ -18,7 +18,7 @@ class CustomLogger(Logging):
         self.file_path = file_path
 
     def _log(self, message: str, level: LogLevel, *args, **kwargs):
-        output_message = f"{datetime.now(tz=UTC)} {level}: {message} {kwargs} {args}"
+        output_message = f"{datetime.now(tz=UTC)} {level}: {message} {kwargs} {args} \n"
         with open(self.file_path, 'a+') as file:
             file.write(output_message)
         print(output_message)

@@ -1,3 +1,4 @@
+import uuid
 from pathlib import Path
 
 from videosentimentanalysis.domain.audio import Audio
@@ -12,6 +13,6 @@ class MoviePyAudioExtractor(ExtractAudio):
 
     def get_audio(self, video) -> Audio:
         video_file = VideoFileClip(str(video.local_storage_path))
-        audio_file_path = self.audio_output_path / f"{video.title}.wav"
+        audio_file_path = self.audio_output_path / f"{uuid.uuid4()}.wav"
         video_file.audio.write_audiofile(str(audio_file_path))
         return Audio(local_storage_path=audio_file_path)
