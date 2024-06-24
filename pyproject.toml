@@ -2,7 +2,7 @@
 name = "videosentimentanalysis"
 version = "0.1.0"
 description = "Extracts sentiment from youtube videos"
-authors = ["Daria Vesela <daria1vesela@gmail.com>"]
+authors = []
 readme = "README.md"
 
 [tool.poetry.dependencies]

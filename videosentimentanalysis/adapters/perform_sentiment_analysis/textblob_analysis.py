@@ -6,10 +6,10 @@ from videosentimentanalysis.usecases.protocols.extract_polarity_and_sensitivity 
 
 class TextBlobAnalysis(ExtractPolarityAndSensitivity):
 
-#add typehints
-    def get_polarity(self, text: str):
+
+    def get_polarity(self, text: str) -> float:
         return TextBlob(text).sentiment.polarity
 
 
-    def get_sensitivity(self, text: str):
+    def get_sensitivity(self, text: str) -> float:
         return TextBlob(text).sentiment.polarity

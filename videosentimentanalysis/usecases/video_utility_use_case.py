@@ -33,11 +33,11 @@ class VideoUtilityUseCase:
         self.translate: TranslateText = translate
         self.extract_emotions: ExtractEmotions = extract_emotions
 
-    def get_sentiment_analysis(self) -> tuple[float, float]:
+    def get_sentiment_analysis(self) -> dict[str, float]:
         transcribed_audio = self.transcribe_audio()
         self.logger.info(f"Performing sentiment analysis on video {self.video.title}")
-        return self.extract_polarity_and_sensitivity.get_polarity(
-            transcribed_audio), self.extract_polarity_and_sensitivity.get_sensitivity(transcribed_audio)
+        return {"polarity": self.extract_polarity_and_sensitivity.get_polarity(
+            transcribed_audio), "sensitivity": self.extract_polarity_and_sensitivity.get_sensitivity(transcribed_audio)}
 
     def extract_audio(self) -> Audio:
         if self._audio is not None:
@@ -68,11 +68,6 @@ class VideoUtilityUseCase:
         transcribed_audio = self.transcribe_audio()
         return self.extract_emotions.get_emotions(text=transcribed_audio)
 
-
     def _multiprocessing_wrapper_audio_extraction_wrapper(self, results, index):
         self.logger.info(f"Extracting audio using process {index}")
         results[index] = self.extract_audio()
-
-
-
-
