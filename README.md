@@ -2,6 +2,32 @@
 ### TO VIEW THE MAIN REPORT, GO TO services/CineSense.ipynb
 ### FOR VIEWING THE OUTPUT FOLDERS, GO TO services/output
 
+
+### About Implementation:
+
+## Architecture
+
+I’ve selected the hexagonal (also called **ports and adapters**) architecture for this project as it is widely used in industry settings due to its scalability and reusability. 
+
+The architecture breaks the program down into **Domain**, **Services**, **Use cases** and **Adapters**. The Domain is the broad data that we’re working with – in this case YouTube videos and their content. Services represent the results we want to obtain from the domain – in this case a Jupyter file which presents the log of what we did with the data, and the #1 downloaded videos, #2 transcribed audio, #3 sentiment analysis, #4 emotion extraction and #5 text translation into Spanish – the result of which can be found in the output files. Because the actual implementation – which lives in the adapters folder – is decoupled from the business logic, the application can be easily maintained should the requirements change – e.g. if we want to use a different library to extract emotions, we simply modify the adapter. 
+
+## Use cases
+There are two major use cases: the actual downloading of the YouTube videos and the **actions we can perform on the content**, such as **sentiment analysis**. I have enveloped the actions into a single use case called utilities to separate the obtaining of the data and the analysis of the data. 
+# Downloading Videos
+Downloading videos only requires one method. I have compared the speed of download for sequential download, threading and multiprocessing. The results of this can be found in the **pandas data frame** in the Jupyter file. Unsurprisingly, the sequential method is the least efficient. The multiprocessing method is the most efficient, as this is a CPU bound task and multiprocessing is taking advantage of multi-core processors and processes downloads in parallel. The time saving is evident, as multiprocessing is roughly 4x quicker than sequential download in this case. Threading also brings a much improved result compared to sequential download, however, as this is not an I/O bound task, it is less efficient than multiprocessing. 
+
+## Analysing Videos
+The **video analysis** consists of **extracting audio**, **transcribing audio**, **extracting sentiment analysis** and **extracting emotions**. I have used the **MoviePy** library for extracting the audio and **speechrecognition** for transcribing it. For extracting emotions I’ve used the **text2emotion** library, for sentiment analysis I’ve used the **TextBlob** library (returning the polarity and sensitivity) and for translation I’ve relied on Google Translate. The results for each video can be found in the respective folder, labelled according to the name of the video. 
+As the extract emotions, extract sentiment analysis and translate methods repeatedly rely on the results of the extract audio and transcribe audio methods, I have used caching to store the extracted and transcribed audio, which significantly increased the overall speed of the program. 
+I have also compared the sequential, threading and multiprocessing methods for extracting audio. Once again, the multiprocessing method is the most efficient due to its suitability for CPU bound tasks. Surprisingly, the sequential method performed marginally better than the threading method. There is a variety of possible reasons for this, with a likely one being that threading creates a lot of overhead in terms of managing context switching and synchronization. Furthermore, threads working on extracting one audio might lead to contention for resources, which is avoided when using the sequential method. 
+Logging
+I have implemented a simple logger to inform the user regarding the state of the processing of individual videos, as well as any potential errors. 
+There is also the option to use loguru for a more scaled up logging experience. 
+
+
+
+
+
 This project requires the installation of Poetry, FFmpeg, and necessary dependencies for smooth operation across various platforms. Additionally, it contains a Jupyter notebook titled `services.ipynb` which needs to be run.
 
 ## Table of Contents
